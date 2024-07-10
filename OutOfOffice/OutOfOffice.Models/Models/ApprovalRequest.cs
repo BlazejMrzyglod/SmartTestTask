@@ -1,6 +1,6 @@
 ﻿namespace OutOfOffice.Models;
 
-public partial class ApprovalRequest
+public partial class ApprovalRequest : IEntity<int>
 {
     public int Id { get; set; }
 

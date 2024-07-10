@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using OutOfOffice.Services.Data;
+using OutOfOffice.Services.Repository.EntityFramework;
+using OutOfOffice.Services.Repository;
 
 namespace OutOfOffice
 {
@@ -16,6 +18,8 @@ namespace OutOfOffice
 				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 			builder.Services.AddControllersWithViews();
+
+			builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
 
 			var app = builder.Build();
 

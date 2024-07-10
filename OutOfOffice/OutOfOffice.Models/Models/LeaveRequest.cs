@@ -1,6 +1,6 @@
 ﻿namespace OutOfOffice.Models;
 
-public partial class LeaveRequest
+public partial class LeaveRequest : IEntity<int>
 {
     public int Id { get; set; }
 

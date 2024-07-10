@@ -1,6 +1,6 @@
 ﻿namespace OutOfOffice.Models;
 
-public partial class Employee
+public partial class Employee : IEntity<int>
 {
     public int Id { get; set; }
 

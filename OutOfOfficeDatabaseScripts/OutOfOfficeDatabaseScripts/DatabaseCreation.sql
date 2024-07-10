@@ -3,10 +3,10 @@ GO
 USE OutOfOffice;
 CREATE TABLE Employees (
 	ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	FullName VARCHAR NOT NULL,
-	Subdivision VARCHAR NOT NULL CHECK(Subdivision IN('HR', 'Development', 'Management', 'Administration')),
-	Position VARCHAR NOT NULL CHECK(Position IN('HR Manager', 'Developer', 'Project Manager', 'Administrator')),
-	Status BIT NOT NULL,
+	FullName VARCHAR(255) NOT NULL,
+	Subdivision VARCHAR(255) NOT NULL CHECK(Subdivision IN('HR', 'Development', 'Management', 'Administration')),
+	Position VARCHAR(255) NOT NULL CHECK(Position IN('HR Manager', 'Developer', 'Project Manager', 'Administrator')),
+	Status VARCHAR(255) NOT NULL CHECK(Status IN('Active', 'Inactive')),
 	PeoplePartner INT NOT NULL FOREIGN KEY REFERENCES Employees(ID),
 	OutOfOfficeBalance INT NOT NULL,
 	Photo IMAGE NULL
@@ -38,29 +38,29 @@ GO
 CREATE TABLE LeaveRequests (
 	ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Employee INT NOT NULL FOREIGN KEY REFERENCES Employees(ID),
-	AbscenceReason VARCHAR NOT NULL CHECK(AbscenceReason IN('Sickness', 'Vacation', 'Family Emergency', 'Other')),
+	AbscenceReason VARCHAR(255) NOT NULL CHECK(AbscenceReason IN('Sickness', 'Vacation', 'Family Emergency', 'Other')),
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
 	Comment TEXT NULL,
-	Status VARCHAR NOT NULL CHECK(Status IN('New', 'Approved')) DEFAULT 'New',
+	Status VARCHAR(255) NOT NULL CHECK(Status IN('New', 'Approved')) DEFAULT 'New',
 	);
 
 CREATE TABLE ApprovalRequests (
 	ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Approver INT NOT NULL FOREIGN KEY REFERENCES Employees(ID),
 	LeaveRequest INT NOT NULL FOREIGN KEY REFERENCES LeaveRequests(ID),
-	Status VARCHAR NOT NULL CHECK(Status IN('New', 'Approved')) DEFAULT 'New',
+	Status VARCHAR(255) NOT NULL CHECK(Status IN('New', 'Approved')) DEFAULT 'New',
 	Comment TEXT NULL,
 	);
 
 CREATE TABLE Projects (
 	ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	ProjectType VARCHAR NOT NULL CHECK(ProjectType IN('Backend', 'Frontend', 'Database')),
+	ProjectType VARCHAR(255) NOT NULL CHECK(ProjectType IN('Backend', 'Frontend', 'Database')),
 	StartDate DATE NOT NULL,
 	EndDate DATE NULL,
 	ProjectManager INT NOT NULL FOREIGN KEY REFERENCES Employees(ID),
 	Comment TEXT NULL,
-	Status VARCHAR NOT NULL CHECK(Status IN('Active', 'Inactive')),
+	Status VARCHAR(255) NOT NULL CHECK(Status IN('Active', 'Inactive')),
 	);
 GO
 CREATE FUNCTION ProjectManagerPosition

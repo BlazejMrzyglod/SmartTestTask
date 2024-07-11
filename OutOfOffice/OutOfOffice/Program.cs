@@ -3,6 +3,9 @@ using OutOfOffice.Services.Data;
 using OutOfOffice.Services.Repository.EntityFramework;
 using OutOfOffice.Services.Repository;
 using OutOfOffice.Models;
+using AutoMapper;
+using OutOfOffice.Models.ViewModels;
+using OutOfOffice.Models.MapperProfiles;
 
 namespace OutOfOffice
 {
@@ -22,7 +25,9 @@ namespace OutOfOffice
 
 			builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
 
-			var app = builder.Build();
+            builder.Services.AddAutoMapper(typeof(EmployeesProfile));
+
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())

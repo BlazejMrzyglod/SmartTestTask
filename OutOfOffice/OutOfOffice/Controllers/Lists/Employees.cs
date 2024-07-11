@@ -23,7 +23,7 @@ namespace OutOfOffice.Controllers.Lists
 		}
 
 		// GET: Employees
-		public async Task<IActionResult> Index(string sortOrder)
+		public async Task<IActionResult> Index(string sortOrder, string searchString)
 		{
 			ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 			ViewData["SubdivisionSortParm"] = sortOrder == "Subdivision" ? "subdivision_desc" : "Subdivision";
@@ -31,11 +31,19 @@ namespace OutOfOffice.Controllers.Lists
 			ViewData["PartnerSortParm"] = sortOrder == "Partner" ? "partner_desc" : "Partner";
 			ViewData["BalanceSortParm"] = sortOrder == "Balance" ? "balance_desc" : "Balance";
 			ViewData["StatusSortParm"] = sortOrder == "Status" ? "status_desc" : "Status";
+            ViewData["CurrentFilter"] = searchString;
 
-			IQueryable<Employee> employees = _repository.GetAllRecords()
+           
+
+            IQueryable<Employee> employees = _repository.GetAllRecords()
 				.Include(e => e.PeoplePartnerNavigation);
 
-			List<EmployeeViewModel> employeesViewModels = new();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                employees = employees.Where(s => s.FullName.Contains(searchString));
+            }
+
+            List<EmployeeViewModel> employeesViewModels = new();
 			
 			switch (sortOrder)
 			{

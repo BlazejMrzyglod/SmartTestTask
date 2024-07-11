@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using OutOfOffice.Services.Data;
 using OutOfOffice.Services.Repository.EntityFramework;
 using OutOfOffice.Services.Repository;
+using OutOfOffice.Models;
 
 namespace OutOfOffice
 {
@@ -14,7 +15,7 @@ namespace OutOfOffice
 			builder.Services.AddDbContext<ApplicationDbContext>();
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-			builder.Services.AddDefaultIdentity<IdentityUser>()
+			builder.Services.AddDefaultIdentity<ApplicationUser>()
 				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 			builder.Services.AddControllersWithViews();

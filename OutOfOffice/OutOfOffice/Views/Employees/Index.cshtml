@@ -13,25 +13,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FullName)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"> @Html.DisplayNameFor(model => model.FullName)</a>              
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Subdivision)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["SubdivisionSortParm"]">@Html.DisplayNameFor(model => model.Subdivision)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Position)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PositionSortParm"]">@Html.DisplayNameFor(model => model.Position)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]">@Html.DisplayNameFor(model => model.Status)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OutOfOfficeBalance)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["BalanceSortParm"]">@Html.DisplayNameFor(model => model.OutOfOfficeBalance)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Photo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PeoplePartnerNavigation)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PartnerSortParm"]">@Html.DisplayNameFor(model => model.PeoplePartnerNavigation)</a>
             </th>
             <th></th>
         </tr>

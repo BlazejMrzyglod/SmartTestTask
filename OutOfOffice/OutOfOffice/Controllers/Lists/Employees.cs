@@ -1,14 +1,27 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OutOfOffice.Models;
+using OutOfOffice.Services.Data;
+using OutOfOffice.Services.Repository;
+using OutOfOffice.Services.Repository.EntityFramework;
+using System.Linq;
 
 namespace OutOfOffice.Controllers.Lists
 {
 	public class Employees : Controller
 	{
+		private readonly IRepositoryService<Employee> _repository;
+
+		public Employees(ApplicationDbContext context)
+		{
+			_repository = new RepositoryService<Employee>(context);
+		}
+
 		// GET: Employees
 		public ActionResult Index()
 		{
-			return View();
+			IQueryable<Employee> employees = _repository.GetAllRecords();
+			return View(employees);
 		}
 
 		// GET: Employees/Details/5

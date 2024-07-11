@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,5 +23,9 @@ namespace OutOfOffice.Models.ViewModels
         public int OutOfOfficeBalance { get; set; }
 
         public byte[]? Photo { get; set; }
+
+        public static SelectList Positions { get; set; } = new SelectList(new List<string> { "HR Manager", "Developer", "Project Manager", "Administrator" });
+        public static SelectList Subfivisions { get; set; } = new SelectList(new List<string> { "HR", "Development", "Management", "Administration" });
+        public static SelectList StatusOptions { get; set; } = new SelectList(new List<string> { "Active", "Inactive" });
     }
 }

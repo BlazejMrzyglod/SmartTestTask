@@ -1,80 +1,90 @@
 ﻿@model IEnumerable<OutOfOffice.Models.ViewModels.EmployeeViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create">Create New</a>
 </p>
 <form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="Index">Back to Full List</a>
-        </p>
-    </div>
+	<div class="form-actions no-color">
+		<p>
+			Find by name: <input type="text" name="SearchString" value="@ViewData["NameFilter"]" />
+			<input type="submit" value="Search" class="btn btn-default" />
+		</p>
+	</div>
 </form>
+<form asp-action="Index" method="get">
+	<div class="form-actions no-color">
+		<p>Filters:</p>
+		<p>Position:<select name="PositionFilter" asp-for="@ViewData["PositionFilter"]" asp-items="OutOfOffice.Models.ViewModels.EmployeeViewModel.Positions"><option value="">All</option></select></p>
+		<p>Subdivision: <select name="SubdivisionFilter" asp-for="@ViewData["SubdivisionFilter"]" asp-items="OutOfOffice.Models.ViewModels.EmployeeViewModel.Subfivisions"><option value="">All</option></select></p>
+		<p>Status: <select name="StatusFilter" asp-for="@ViewData["StatusFilter"]" asp-items="OutOfOffice.Models.ViewModels.EmployeeViewModel.StatusOptions"><option value="">All</option></select></p>
+		<p><input type="submit" value="Filter" class="btn btn-default" /></p>
+	</div>
+</form>
+<a asp-action="Index">Back to Full List</a>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"> @Html.DisplayNameFor(model => model.FullName)</a>              
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["SubdivisionSortParm"]">@Html.DisplayNameFor(model => model.Subdivision)</a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["PositionSortParm"]">@Html.DisplayNameFor(model => model.Position)</a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]">@Html.DisplayNameFor(model => model.Status)</a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["BalanceSortParm"]">@Html.DisplayNameFor(model => model.OutOfOfficeBalance)</a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Photo)
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["PartnerSortParm"]">@Html.DisplayNameFor(model => model.PeoplePartner)</a>
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subdivision)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Position)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OutOfOfficeBalance)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Photo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PeoplePartner)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"> @Html.DisplayNameFor(model => model.FullName)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["SubdivisionSortParm"]">@Html.DisplayNameFor(model => model.Subdivision)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["PositionSortParm"]">@Html.DisplayNameFor(model => model.Position)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]">@Html.DisplayNameFor(model => model.Status)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["BalanceSortParm"]">@Html.DisplayNameFor(model => model.OutOfOfficeBalance)</a>
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Photo)
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["PartnerSortParm"]">@Html.DisplayNameFor(model => model.PeoplePartner)</a>
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.FullName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Subdivision)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Position)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.OutOfOfficeBalance)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Photo)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.PeoplePartner)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>

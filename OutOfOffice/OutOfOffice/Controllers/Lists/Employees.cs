@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Models;
 using OutOfOffice.Models.ViewModels;
@@ -23,7 +24,7 @@ namespace OutOfOffice.Controllers.Lists
 		}
 
 		// GET: Employees
-		public async Task<IActionResult> Index(string sortOrder, string searchString)
+		public async Task<IActionResult> Index(string sortOrder, string searchString, string positionFilter, string subdivisionFilter, string statusFilter)
 		{
 			ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 			ViewData["SubdivisionSortParm"] = sortOrder == "Subdivision" ? "subdivision_desc" : "Subdivision";
@@ -31,9 +32,10 @@ namespace OutOfOffice.Controllers.Lists
 			ViewData["PartnerSortParm"] = sortOrder == "Partner" ? "partner_desc" : "Partner";
 			ViewData["BalanceSortParm"] = sortOrder == "Balance" ? "balance_desc" : "Balance";
 			ViewData["StatusSortParm"] = sortOrder == "Status" ? "status_desc" : "Status";
-            ViewData["CurrentFilter"] = searchString;
-
-           
+            ViewData["NameFilter"] = searchString;
+            ViewData["PositionFilter"] = positionFilter;
+            ViewData["SubdivisionFilter"] = subdivisionFilter;
+            ViewData["StatusFilter"] = statusFilter;
 
             IQueryable<Employee> employees = _repository.GetAllRecords()
 				.Include(e => e.PeoplePartnerNavigation);
@@ -41,6 +43,21 @@ namespace OutOfOffice.Controllers.Lists
             if (!String.IsNullOrEmpty(searchString))
             {
                 employees = employees.Where(s => s.FullName.Contains(searchString));
+            }
+			
+			if (!String.IsNullOrEmpty(positionFilter))
+            {
+                employees = employees.Where(s => s.Position.Equals(positionFilter));
+            }
+			
+			if (!String.IsNullOrEmpty(subdivisionFilter))
+            {
+                employees = employees.Where(s => s.Subdivision.Equals(subdivisionFilter));
+            }
+			
+			if (!String.IsNullOrEmpty(statusFilter))
+            {
+                employees = employees.Where(s => s.Status.Equals(statusFilter));
             }
 
             List<EmployeeViewModel> employeesViewModels = new();

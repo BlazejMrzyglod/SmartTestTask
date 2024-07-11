@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OutOfOffice.Models.Employee>
+﻿@model IEnumerable<OutOfOffice.Models.ViewModels.EmployeeViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -31,7 +31,7 @@
                 @Html.DisplayNameFor(model => model.Photo)
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["PartnerSortParm"]">@Html.DisplayNameFor(model => model.PeoplePartnerNavigation)</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PartnerSortParm"]">@Html.DisplayNameFor(model => model.PeoplePartner)</a>
             </th>
             <th></th>
         </tr>
@@ -58,7 +58,7 @@
                 @Html.DisplayFor(modelItem => item.Photo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PeoplePartnerNavigation.FullName)
+                @Html.DisplayFor(modelItem => item.PeoplePartner)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

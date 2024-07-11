@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Models;
+using OutOfOffice.Models.ViewModels;
 using OutOfOffice.Services.Data;
 using OutOfOffice.Services.Repository;
 using OutOfOffice.Services.Repository.EntityFramework;
@@ -12,19 +14,15 @@ namespace OutOfOffice.Controllers.Lists
 	public class Employees : Controller
 	{
 		private readonly IRepositoryService<Employee> _repository;
+        private readonly IMapper _mapper;
 
-		public Employees(ApplicationDbContext context)
+        public Employees(ApplicationDbContext context, IMapper mapper)
 		{
 			_repository = new RepositoryService<Employee>(context);
+			_mapper = mapper;
 		}
 
 		// GET: Employees
-/*		public ActionResult Index()
-		{
-			IQueryable<Employee> employees = _repository.GetAllRecords();
-			return View(employees);
-		}*/
-
 		public async Task<IActionResult> Index(string sortOrder)
 		{
 			ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -34,8 +32,11 @@ namespace OutOfOffice.Controllers.Lists
 			ViewData["BalanceSortParm"] = sortOrder == "Balance" ? "balance_desc" : "Balance";
 			ViewData["StatusSortParm"] = sortOrder == "Status" ? "status_desc" : "Status";
 
-			IQueryable<Employee> employees = _repository.GetAllRecords();
+			IQueryable<Employee> employees = _repository.GetAllRecords()
+				.Include(e => e.PeoplePartnerNavigation);
 
+			List<EmployeeViewModel> employeesViewModels = new();
+			
 			switch (sortOrder)
 			{
 				case "name_desc":
@@ -75,7 +76,12 @@ namespace OutOfOffice.Controllers.Lists
 					employees = employees.OrderBy(e => e.FullName);
 					break;
 			}
-			return View(await employees.AsNoTracking().ToListAsync());
+            foreach (var employee in employees)
+            {
+                employeesViewModels.Add(_mapper.Map<EmployeeViewModel>(employee));
+            }
+
+            return View(employeesViewModels);
 		}
 
 		// GET: Employees/Details/5

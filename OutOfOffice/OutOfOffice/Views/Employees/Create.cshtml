@@ -1,5 +1,9 @@
-﻿@model OutOfOffice.Models.ViewModels.EmployeeViewModel
-
+﻿@using OutOfOffice.Services.Repository
+@model OutOfOffice.Models.ViewModels.EmployeeViewModel
+@inject IRepositoryService<Employee> _repository
+@{
+    OutOfOffice.Models.ViewModels.EmployeeViewModel.HRManagers = new SelectList(_repository.GetAllRecords().Where(e => e.Position == "HR Manager").Select(e=>e.FullName));
+}
 @{
     ViewData["Title"] = "Create";
 }
@@ -34,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="PeoplePartner" class="control-label"></label>
-                <input asp-for="PeoplePartner" class="form-control" />
+                @Html.DropDownListFor(model => model.PeoplePartner, OutOfOffice.Models.ViewModels.EmployeeViewModel.HRManagers, new { @class = "form-control" })
                 <span asp-validation-for="PeoplePartner" class="text-danger"></span>
             </div>
             <div class="form-group">

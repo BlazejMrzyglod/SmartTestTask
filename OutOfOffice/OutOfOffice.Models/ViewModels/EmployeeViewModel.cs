@@ -27,5 +27,6 @@ namespace OutOfOffice.Models.ViewModels
         public static SelectList Positions { get; set; } = new SelectList(new List<string> { "HR Manager", "Developer", "Project Manager", "Administrator" });
         public static SelectList Subdivisions { get; set; } = new SelectList(new List<string> { "HR", "Development", "Management", "Administration" });
         public static SelectList StatusOptions { get; set; } = new SelectList(new List<string> { "Active", "Inactive" });
+        public static SelectList? HRManagers { get; set; }
     }
 }

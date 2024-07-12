@@ -1,0 +1,70 @@
+﻿@model OutOfOffice.Models.ViewModels.EmployeeEditViewModel
+@using OutOfOffice.Services.Repository
+@inject IRepositoryService<Employee> _repository
+@{
+    OutOfOffice.Models.ViewModels.EmployeeEditViewModel.HRManagers = new SelectList(_repository.GetAllRecords().Where(e => e.Position == "HR Manager").Select(e=>e.FullName));
+}
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Employee</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CurrentPhoto" />
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subdivision" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Subdivision, OutOfOffice.Models.ViewModels.EmployeeEditViewModel.Subdivisions, new { @class = "form-control" })
+                <span asp-validation-for="Subdivision" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Position" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Position, OutOfOffice.Models.ViewModels.EmployeeEditViewModel.Positions, new { @class = "form-control" })
+                <span asp-validation-for="Position" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Status, OutOfOffice.Models.ViewModels.EmployeeEditViewModel.StatusOptions, new { @class = "form-control" })
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeoplePartner" class="control-label"></label>
+                @Html.DropDownListFor(model => model.PeoplePartner, OutOfOffice.Models.ViewModels.EmployeeEditViewModel.HRManagers, new { @class = "form-control" })
+                <span asp-validation-for="PeoplePartner" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OutOfOfficeBalance" class="control-label"></label>
+                <input asp-for="OutOfOfficeBalance" class="form-control" />
+                <span asp-validation-for="OutOfOfficeBalance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhotoToChange" class="control-label"></label>
+                <input asp-for="PhotoToChange" class="form-control" />
+                <span asp-validation-for="PhotoToChange" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

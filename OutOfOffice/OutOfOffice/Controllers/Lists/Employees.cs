@@ -140,16 +140,20 @@ namespace OutOfOffice.Controllers.Lists
         // GET: Employees/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Employee employee = _repository.GetAllRecords().Where(x => x.Id == id).Include(x => x.PeoplePartnerNavigation).Single();
+
+            return View(_mapper.Map<EmployeeEditViewModel>(employee));
         }
 
         // POST: Employees/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, [Bind("Id,FullName,Subdivision,Position,Status,PeoplePartner,OutOfOfficeBalance,PhotoToChange, CurrentPhoto")] EmployeeEditViewModel employee)
         {
             try
             {
+                _repository.Edit(_mapper.Map<Employee>(employee));
+                _repository.Save();
                 return RedirectToAction(nameof(Index));
             }
             catch

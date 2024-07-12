@@ -156,7 +156,15 @@ namespace OutOfOffice.Controllers.Lists
             }
         }
 
-        // GET: Employees/Delete/5
+        // GET: Employees/Details/5
+        public ActionResult Details(int id)
+        {
+            Employee employee = _repository.GetAllRecords().Where(x => x.Id == id).Include(x => x.PeoplePartnerNavigation).Include(x=>x.Projects).Single();
+
+            return View(_mapper.Map<EmployeeEditViewModel>(employee));
+        }
+
+        // GET: Employees/ChangeStatus/5
         public ActionResult ChangeStatus(int id)
         {
             Employee employee = _repository.GetSingle(id);

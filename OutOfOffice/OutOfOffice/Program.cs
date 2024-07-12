@@ -5,7 +5,7 @@ using OutOfOffice.Services.Repository;
 using OutOfOffice.Models;
 using AutoMapper;
 using OutOfOffice.Models.ViewModels;
-using OutOfOffice.Models.MapperProfiles;
+using OutOfOffice.MapperProfiles;
 
 namespace OutOfOffice
 {

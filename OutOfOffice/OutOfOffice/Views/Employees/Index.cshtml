@@ -74,7 +74,11 @@
 					@Html.DisplayFor(modelItem => item.OutOfOfficeBalance)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Photo)
+					@{
+						var base64 = Convert.ToBase64String(item.Photo);
+						var Image = String.Format("data:image/gif;base64,{0}", base64);
+					}
+					<img src="@Image" alt="" class="img-fluid">
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.PeoplePartner)

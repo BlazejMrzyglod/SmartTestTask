@@ -109,12 +109,6 @@ namespace OutOfOffice.Controllers.Lists
             return View(employeesViewModels);
         }
 
-        // GET: Employees/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: Employees/Create
         public ActionResult Create()
         {
@@ -163,24 +157,17 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: Employees/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult ChangeStatus(int id)
         {
-            return View();
-        }
-
-        // POST: Employees/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Employee employee = _repository.GetSingle(id);
+            string status = employee.Status;
+            if (status == "Active")
+                employee.Status = "Inactive";
+            else
+                employee.Status = "Active";
+            _repository.Edit(employee);
+            _repository.Save();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

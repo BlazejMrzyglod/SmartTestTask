@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace OutOfOffice.Models.ViewModels
 
         public int OutOfOfficeBalance { get; set; }
 
-        public byte[]? Photo { get; set; }
+        public IFormFile? Photo { get; set; }
 
         public static SelectList Positions { get; set; } = new SelectList(new List<string> { "HR Manager", "Developer", "Project Manager", "Administrator" });
         public static SelectList Subdivisions { get; set; } = new SelectList(new List<string> { "HR", "Development", "Management", "Administration" });

@@ -1,0 +1,63 @@
+﻿@model OutOfOffice.Models.ViewModels.EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>EmployeeViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subdivision" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Subdivision, OutOfOffice.Models.ViewModels.EmployeeViewModel.Subdivisions, new{@class="form-control"})
+                <span asp-validation-for="Subdivision" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Position" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Position, OutOfOffice.Models.ViewModels.EmployeeViewModel.Positions, new { @class = "form-control" })
+                <span asp-validation-for="Position" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Status, OutOfOffice.Models.ViewModels.EmployeeViewModel.StatusOptions, new { @class = "form-control" })
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeoplePartner" class="control-label"></label>
+                <input asp-for="PeoplePartner" class="form-control" />
+                <span asp-validation-for="PeoplePartner" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OutOfOfficeBalance" class="control-label"></label>
+                <input asp-for="OutOfOfficeBalance" class="form-control" />
+                <span asp-validation-for="OutOfOfficeBalance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label"></label>
+                <input asp-for="Photo" class="form-control" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

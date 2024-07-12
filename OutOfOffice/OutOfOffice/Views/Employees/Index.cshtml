@@ -21,7 +21,7 @@
 	<div class="form-actions no-color">
 		<p>Filters:</p>
 		<p>Position:<select name="PositionFilter" asp-for="@ViewData["PositionFilter"]" asp-items="OutOfOffice.Models.ViewModels.EmployeeViewModel.Positions"><option value="">All</option></select></p>
-		<p>Subdivision: <select name="SubdivisionFilter" asp-for="@ViewData["SubdivisionFilter"]" asp-items="OutOfOffice.Models.ViewModels.EmployeeViewModel.Subfivisions"><option value="">All</option></select></p>
+		<p>Subdivision: <select name="SubdivisionFilter" asp-for="@ViewData["SubdivisionFilter"]" asp-items="OutOfOffice.Models.ViewModels.EmployeeViewModel.Subdivisions"><option value="">All</option></select></p>
 		<p>Status: <select name="StatusFilter" asp-for="@ViewData["StatusFilter"]" asp-items="OutOfOffice.Models.ViewModels.EmployeeViewModel.StatusOptions"><option value="">All</option></select></p>
 		<p><input type="submit" value="Filter" class="btn btn-default" /></p>
 	</div>

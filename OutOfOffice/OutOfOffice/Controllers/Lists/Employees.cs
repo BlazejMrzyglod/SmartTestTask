@@ -159,7 +159,7 @@ namespace OutOfOffice.Controllers.Lists
         // GET: Employees/Details/5
         public ActionResult Details(int id)
         {
-            Employee employee = _repository.GetAllRecords().Where(x => x.Id == id).Include(x => x.PeoplePartnerNavigation).Include(x=>x.Projects).Single();
+            Employee employee = _repository.GetAllRecords().Where(x => x.Id == id).Include(x => x.PeoplePartnerNavigation).Include(x=>x.ProjectsAndEmployees).Single();
 
             return View(_mapper.Map<EmployeeEditViewModel>(employee));
         }

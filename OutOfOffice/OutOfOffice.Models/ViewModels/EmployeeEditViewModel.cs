@@ -30,6 +30,6 @@ namespace OutOfOffice.Models.ViewModels
         public static SelectList Subdivisions { get; set; } = new SelectList(new List<string> { "HR", "Development", "Management", "Administration" });
         public static SelectList StatusOptions { get; set; } = new SelectList(new List<string> { "Active", "Inactive" });
         public static SelectList? HRManagers { get; set; }
-		public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+		public virtual ICollection<ProjectsAndEmployee> ProjectsAndEmployees { get; set; } = new List<ProjectsAndEmployee>();
 	}
 }

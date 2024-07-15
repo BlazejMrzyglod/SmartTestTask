@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OutOfOffice.Models;
 
-public partial class ProjectsAndEmployee
+public partial class ProjectsAndEmployee : IEntity<int>
 {
     public int Id { get; set; }
 

@@ -1,0 +1,14 @@
+﻿@model List<int>
+@{
+    ViewData["Title"] = "AssignEmployee";
+}
+
+<h1>AssignEmployee</h1>
+<form asp-action="AssignEmployee">
+    <div class="form-group">
+        <select name="ProjectId" asp-items="new SelectList(Model)"></select>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Assign" class="btn btn-primary" />
+    </div>
+</form>

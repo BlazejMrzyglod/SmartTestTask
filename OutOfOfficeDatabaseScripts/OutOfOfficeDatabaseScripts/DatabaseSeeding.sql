@@ -26,3 +26,6 @@ VALUES (1, 1);
 
 INSERT INTO Projects (ProjectType, StartDate, ProjectManager, Status)
 VALUES ('Backend', GETDATE(), 4, 'Active');
+
+INSERT INTO ProjectsAndEmployees(EmployeeId, ProjectId)
+VALUES (4, 1)

@@ -85,3 +85,10 @@ GO
 ALTER TABLE Projects
 ADD CONSTRAINT IsProjectManager CHECK(dbo.ProjectManagerPosition(ProjectManager)=1);
 GO
+
+CREATE TABLE ProjectsAndEmployees (
+	ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	EmployeeId INT NOT NULL FOREIGN KEY REFERENCES Employees(ID),
+	ProjectId INT NOT NULL FOREIGN KEY REFERENCES Projects(ID),
+	);
+GO

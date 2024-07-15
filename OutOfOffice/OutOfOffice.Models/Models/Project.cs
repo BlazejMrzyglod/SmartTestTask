@@ -17,4 +17,5 @@ public partial class Project : IEntity<int>
     public string Status { get; set; } = null!;
 
     public virtual Employee ProjectManagerNavigation { get; set; } = null!;
+	public virtual ICollection<ProjectsAndEmployee> ProjectsAndEmployees { get; set; } = new List<ProjectsAndEmployee>();
 }

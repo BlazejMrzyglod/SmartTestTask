@@ -52,7 +52,7 @@
 					@Html.DisplayFor(modelItem => item.Approver)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.LeaveRequest)
+					<a asp-controller="LeaveRequests" asp-action="Details" asp-route-id="@item.LeaveRequest">@Html.DisplayFor(modelItem => item.LeaveRequest)</a>
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.Status)

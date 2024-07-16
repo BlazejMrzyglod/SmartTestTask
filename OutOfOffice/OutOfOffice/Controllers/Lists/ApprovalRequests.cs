@@ -13,11 +13,15 @@ namespace OutOfOffice.Controllers.Lists
 	public class ApprovalRequests : Controller
 	{
 		private readonly IRepositoryService<ApprovalRequest> _repository;
+		private readonly IRepositoryService<LeaveRequest> _leaveRequestsRepository;
+		private readonly IRepositoryService<Employee> _employeesRepository;
 		private readonly IMapper _mapper;
 
 		public ApprovalRequests(ApplicationDbContext context, IMapper mapper)
 		{
 			_repository = new RepositoryService<ApprovalRequest>(context);
+			_leaveRequestsRepository = new RepositoryService<LeaveRequest>(context);
+			_employeesRepository = new RepositoryService<Employee>(context);
 			_mapper = mapper;
 		}
 		// GET: ApprovalRequests
@@ -99,6 +103,30 @@ namespace OutOfOffice.Controllers.Lists
 			ApprovalRequest approvalRequest = _repository.GetAllRecords()
 														 .Include(e => e.ApproverNavigation).Where(e => e.Id == id).Single();
 			return View(_mapper.Map<ApprovalRequestViewModel>(approvalRequest));
+		}
+		
+		// GET: ApprovalRequests/Details/5
+		public ActionResult Approve(int id)
+		{
+
+			ApprovalRequest approvalRequest = _repository.GetSingle(id);
+			if (approvalRequest.Status != "Approved")
+			{
+				approvalRequest.Status = "Approved";
+				_repository.Edit(approvalRequest);
+				_repository.Save();
+
+				LeaveRequest leaveRequest = _leaveRequestsRepository.GetSingle(approvalRequest.LeaveRequest);
+				leaveRequest.Status = "Approved";
+				_leaveRequestsRepository.Edit(leaveRequest);
+				_leaveRequestsRepository.Save();
+
+				Employee employee = _employeesRepository.GetSingle(leaveRequest.Employee);
+				employee.OutOfOfficeBalance -= (leaveRequest.EndDate.Day - leaveRequest.StartDate.Day);
+				_employeesRepository.Edit(employee);
+				_employeesRepository.Save();
+			}
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }

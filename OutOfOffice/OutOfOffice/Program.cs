@@ -25,7 +25,7 @@ namespace OutOfOffice
 
 			builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
 
-            builder.Services.AddAutoMapper(typeof(EmployeesProfile));
+            builder.Services.AddAutoMapper(typeof(EmployeesProfile), typeof(ApprovalRequestsProfile));
 
             var app = builder.Build();
 

@@ -1,0 +1,68 @@
+﻿@model IEnumerable<OutOfOffice.Models.ViewModels.ApprovalRequestViewModel>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form asp-action="Index" method="get">
+	<div class="form-actions no-color">
+		<p>
+			Find by request number: <input type="number" name="SearchString" value="@ViewData["NumberFilter"]" />
+			<input type="submit" value="Search" class="btn btn-default" />
+		</p>
+	</div>	
+</form>
+<form asp-action="Index" method="get">
+	<div class="form-actions no-color">
+		<p>Filters:</p>
+		<p>Approver: <input type="text" name="ApproverFilter" asp-for="@ViewData["ApproverFilter"]"/></p>
+		<p>Leave request: <input type="number" name="RequestFilter" asp-for="@ViewData["RequestFilter"]"/></p>
+		<p>Status: <select name="StatusFilter" asp-for="@ViewData["StatusFilter"]" asp-items="OutOfOffice.Models.ViewModels.ApprovalRequestViewModel.StatusOptions"><option value="">All</option></select></p>
+		<p><input type="submit" value="Filter" class="btn btn-default" /></p>
+	</div>
+</form>
+<a asp-action="Index">Back to Full List</a>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]"> @Html.DisplayNameFor(model => model.Id)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["ApproverSortParm"]">@Html.DisplayNameFor(model => model.Approver)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["RequestSortParm"]">@Html.DisplayNameFor(model => model.LeaveRequest)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]">@Html.DisplayNameFor(model => model.Status)</a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Approver)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.LeaveRequest)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-action="Approve" asp-route-id="@item.Id">Approve</a> |
+					<a asp-action="Reject" asp-route-id="@item.Id">Reject</a> 
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

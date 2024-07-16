@@ -42,14 +42,14 @@ CREATE TABLE LeaveRequests (
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
 	Comment TEXT NULL,
-	Status VARCHAR(255) NOT NULL CHECK(Status IN('New', 'Approved')) DEFAULT 'New',
+	Status VARCHAR(255) NOT NULL CHECK(Status IN('New', 'Approved', 'Rejected', 'Submitted', 'Canceled')) DEFAULT 'New',
 	);
 
 CREATE TABLE ApprovalRequests (
 	ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Approver INT NOT NULL FOREIGN KEY REFERENCES Employees(ID),
 	LeaveRequest INT NOT NULL FOREIGN KEY REFERENCES LeaveRequests(ID),
-	Status VARCHAR(255) NOT NULL CHECK(Status IN('New', 'Approved')) DEFAULT 'New',
+	Status VARCHAR(255) NOT NULL CHECK(Status IN('New', 'Approved', 'Rejected')) DEFAULT 'New',
 	Comment TEXT NULL,
 	);
 

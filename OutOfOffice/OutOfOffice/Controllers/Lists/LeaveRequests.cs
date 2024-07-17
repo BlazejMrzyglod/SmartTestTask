@@ -110,7 +110,9 @@ namespace OutOfOffice.Controllers.Lists
 		// GET: LeaveRequests/Details/5
 		public ActionResult Details(int id)
 		{
-			return View();
+			LeaveRequest leaveRequest = _repository.GetAllRecords()
+														 .Include(e => e.EmployeeNavigation).Where(e => e.Id == id).Single();
+			return View(_mapper.Map<LeaveRequestViewModel>(leaveRequest));
 		}
 
 		// GET: LeaveRequests/Create

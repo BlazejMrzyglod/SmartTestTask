@@ -9,7 +9,7 @@ namespace OutOfOffice.MapperProfiles
 		public LeaveRequestsProfile()
 		{
 			CreateMap<LeaveRequest, LeaveRequestViewModel>().ForMember(dest => dest.Employee, opt => opt.MapFrom(e => e.EmployeeNavigation.FullName));
-			//CreateMap<LeaveRequestViewModel, LeaveRequest>();
+			CreateMap<LeaveRequestViewModel, LeaveRequest>();
 		}
 	}
 }

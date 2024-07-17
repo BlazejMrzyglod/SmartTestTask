@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Models;
@@ -7,18 +8,21 @@ using OutOfOffice.Models.ViewModels;
 using OutOfOffice.Services.Data;
 using OutOfOffice.Services.Repository;
 using OutOfOffice.Services.Repository.EntityFramework;
+using System.Security.Claims;
 
 namespace OutOfOffice.Controllers.Lists
 {
 	public class LeaveRequests : Controller
 	{
 		private readonly IRepositoryService<LeaveRequest> _repository;
-		private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-		public LeaveRequests(ApplicationDbContext context, IMapper mapper)
+		public LeaveRequests(ApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
 		{
 			_repository = new RepositoryService<LeaveRequest>(context);
 			_mapper = mapper;
+			_userManager = userManager;
 		}
 
 		// GET: LeaveRequests
@@ -124,10 +128,15 @@ namespace OutOfOffice.Controllers.Lists
 		// POST: LeaveRequests/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
+		public async Task<IActionResult> Create([Bind("AbscenceReason,StartDate,EndDate,Comment,Status")] LeaveRequestViewModel _leaveRequest)
 		{
 			try
 			{
+				LeaveRequest leaveRequest = _mapper.Map<LeaveRequest>(_leaveRequest);
+				ApplicationUser? _user = await _userManager.GetUserAsync(User);
+				leaveRequest.Employee = _user!.EmployeeId;
+				_repository.Add(leaveRequest);
+				_repository.Save();
 				return RedirectToAction(nameof(Index));
 			}
 			catch

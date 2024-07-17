@@ -128,7 +128,7 @@ namespace OutOfOffice.Controllers.Lists
 		// POST: LeaveRequests/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("AbscenceReason,StartDate,EndDate,Comment,Status")] LeaveRequestViewModel _leaveRequest)
+		public async Task<IActionResult> Create([Bind("AbscenceReason,StartDate,EndDate,Comment")] LeaveRequestViewModel _leaveRequest)
 		{
 			try
 			{
@@ -148,23 +148,32 @@ namespace OutOfOffice.Controllers.Lists
 		// GET: LeaveRequests/Edit/5
 		public ActionResult Edit(int id)
 		{
-			return View();
-		}
+            LeaveRequest leaveRequest = _repository.GetAllRecords().Where(x => x.Id == id).Include(e => e.EmployeeNavigation).Single(); ;
+
+            return View(_mapper.Map<LeaveRequestViewModel>(leaveRequest));
+        }
 
 		// POST: LeaveRequests/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		public ActionResult Edit(int id, [Bind("AbscenceReason,StartDate,EndDate,Comment")] LeaveRequestViewModel _leaveRequest)
 		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
+            try
+            {
+				LeaveRequest leaveRequest = _repository.GetSingle(id);
+				leaveRequest.AbscenceReason = _leaveRequest.AbscenceReason;
+				leaveRequest.StartDate = _leaveRequest.StartDate;
+				leaveRequest.EndDate = _leaveRequest.EndDate;
+				leaveRequest.Comment = _leaveRequest.Comment;
+                _repository.Edit(leaveRequest);
+                _repository.Save();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
 		// GET: LeaveRequests/Delete/5
 		public ActionResult Delete(int id)

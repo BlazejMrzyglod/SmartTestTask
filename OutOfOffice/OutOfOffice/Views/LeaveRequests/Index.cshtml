@@ -1,0 +1,84 @@
+﻿@model IEnumerable<OutOfOffice.Models.ViewModels.LeaveRequestViewModel>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+	<a asp-action="Create">Create request</a>
+</p>
+<form asp-action="Index" method="get">
+	<div class="form-actions no-color">
+		<p>
+			Find by request number: <input type="number" name="SearchString" value="@ViewData["NumberFilter"]" />
+			<input type="submit" value="Search" class="btn btn-default" />
+		</p>
+	</div>
+</form>
+<form asp-action="Index" method="get">
+	<div class="form-actions no-color">
+		<p>Filters:</p>
+		<p>Employee: <input type="text" name="EmployeeFilter" asp-for="@ViewData["EmployeeFilter"]" /></p>
+		<p>Abscence reason: <select name="ReasonFilter" asp-for="@ViewData["ReasonFilter"]" asp-items="OutOfOffice.Models.ViewModels.LeaveRequestViewModel.AbscenceReasonOptions"><option value="">All</option></select></p>
+		<p>Status: <select name="StatusFilter" asp-for="@ViewData["StatusFilter"]" asp-items="OutOfOffice.Models.ViewModels.LeaveRequestViewModel.StatusOptions"><option value="">All</option></select></p>
+		<p><input type="submit" value="Filter" class="btn btn-default" /></p>
+	</div>
+</form>
+<a asp-action="Index">Back to Full List</a>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]"> @Html.DisplayNameFor(model => model.Id)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["EmployeeSortParm"]"> @Html.DisplayNameFor(model => model.Employee)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["ReasonSortParm"]">@Html.DisplayNameFor(model => model.AbscenceReason)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["StartDateSortParm"]">@Html.DisplayNameFor(model => model.StartDate)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["EndDateSortParm"]">@Html.DisplayNameFor(model => model.EndDate)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]">@Html.DisplayNameFor(model => model.Status)</a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Employee)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.AbscenceReason)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.StartDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.EndDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+					<a asp-action="Submit" asp-route-id="@item.Id">Submit</a> |
+					<a asp-action="Cancel" asp-route-id="@item.Id">Cancel</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

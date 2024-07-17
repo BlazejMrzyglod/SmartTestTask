@@ -105,7 +105,7 @@ namespace OutOfOffice.Controllers.Lists
 			return View(_mapper.Map<ApprovalRequestViewModel>(approvalRequest));
 		}
 		
-		// GET: ApprovalRequests/Details/5
+		// GET: ApprovalRequests/Approve/5
 		public ActionResult Approve(int id)
 		{
 
@@ -127,6 +127,40 @@ namespace OutOfOffice.Controllers.Lists
 				_employeesRepository.Save();
 			}
 			return RedirectToAction(nameof(Index));
+		}
+
+		// GET: ApprovalRequests/Reject/5
+		public ActionResult Reject(int id)
+		{
+			return View();
+		}
+
+		// POST: ApprovalRequests/Reject/5
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Reject(int id, string comment)
+		{
+			try
+			{
+				ApprovalRequest approvalRequest = _repository.GetSingle(id);
+				if (approvalRequest.Status != "Rejected")
+				{
+					approvalRequest.Comment = comment;
+					approvalRequest.Status = "Rejected";
+					_repository.Edit(_mapper.Map<ApprovalRequest>(approvalRequest));
+					_repository.Save();
+
+					LeaveRequest leaveRequest = _leaveRequestsRepository.GetSingle(approvalRequest.LeaveRequest);
+					leaveRequest.Status = "Rejected";
+					_leaveRequestsRepository.Edit(leaveRequest);
+					_leaveRequestsRepository.Save();
+				}
+				return RedirectToAction(nameof(Index));
+			}
+			catch
+			{
+				return View();
+			}
 		}
 	}
 }

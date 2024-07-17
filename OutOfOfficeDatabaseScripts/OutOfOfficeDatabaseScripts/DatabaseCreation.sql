@@ -49,7 +49,7 @@ CREATE TABLE ApprovalRequests (
 	ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Approver INT NOT NULL FOREIGN KEY REFERENCES Employees(ID),
 	LeaveRequest INT NOT NULL FOREIGN KEY REFERENCES LeaveRequests(ID),
-	Status VARCHAR(255) NOT NULL CHECK(Status IN('New', 'Approved', 'Rejected')) DEFAULT 'New',
+	Status VARCHAR(255) NOT NULL CHECK(Status IN('New', 'Approved', 'Rejected', 'Canceled')) DEFAULT 'New',
 	Comment TEXT NULL,
 	);
 

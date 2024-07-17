@@ -21,11 +21,23 @@ VALUES ('Ila Salazar', 'Administration', 'Administrator', 'Active', 1, 30);
 INSERT INTO LeaveRequests (Employee, AbscenceReason, StartDate, EndDate)
 VALUES (3, 'Sickness', GETDATE(), GETDATE()+3);	
 
+INSERT INTO LeaveRequests (Employee, AbscenceReason, StartDate, EndDate)
+VALUES (4, 'Vacation', GETDATE(), GETDATE()+7);	
+
 INSERT INTO ApprovalRequests (Approver, LeaveRequest)
-VALUES (1, 1);	
+VALUES (1, 1);
+
+INSERT INTO ApprovalRequests (Approver, LeaveRequest)
+VALUES (2, 2);
 
 INSERT INTO Projects (ProjectType, StartDate, ProjectManager, Status)
 VALUES ('Backend', GETDATE(), 4, 'Active');
 
+INSERT INTO Projects (ProjectType, StartDate, ProjectManager, Status)
+VALUES ('Frontend', GETDATE(), 4, 'Active');
+
 INSERT INTO ProjectsAndEmployees(EmployeeId, ProjectId)
 VALUES (4, 1)
+
+INSERT INTO ProjectsAndEmployees(EmployeeId, ProjectId)
+VALUES (4, 2)

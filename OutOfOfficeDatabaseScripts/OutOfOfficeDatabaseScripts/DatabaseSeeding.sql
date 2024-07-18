@@ -41,3 +41,9 @@ VALUES (4, 1)
 
 INSERT INTO ProjectsAndEmployees(EmployeeId, ProjectId)
 VALUES (4, 2)
+
+INSERT INTO ProjectsAndEmployees(EmployeeId, ProjectId)
+VALUES (3, 1)
+
+INSERT INTO ProjectsAndEmployees(EmployeeId, ProjectId)
+VALUES (3, 2)

@@ -15,12 +15,18 @@ namespace OutOfOffice.Controllers.Lists
 	public class LeaveRequests : Controller
 	{
 		private readonly IRepositoryService<LeaveRequest> _repository;
+		private readonly IRepositoryService<ApprovalRequest> _approvalRequestsRepository;
+		private readonly IRepositoryService<Employee> _employeesRepository;
+		private readonly IRepositoryService<Project> _projectsRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
 		public LeaveRequests(ApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
 		{
 			_repository = new RepositoryService<LeaveRequest>(context);
+			_approvalRequestsRepository = new RepositoryService<ApprovalRequest>(context);
+			_employeesRepository = new RepositoryService<Employee>(context);
+			_projectsRepository = new RepositoryService<Project>(context);
 			_mapper = mapper;
 			_userManager = userManager;
 		}
@@ -167,6 +173,7 @@ namespace OutOfOffice.Controllers.Lists
 				leaveRequest.Comment = _leaveRequest.Comment;
                 _repository.Edit(leaveRequest);
                 _repository.Save();
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -175,10 +182,60 @@ namespace OutOfOffice.Controllers.Lists
             }
         }
 
-		// GET: LeaveRequests/Delete/5
-		public ActionResult Delete(int id)
+		// GET: LeaveRequests/Submit/5
+		public async Task<IActionResult> Submit(int id)
 		{
-			return View();
+			try
+			{
+				LeaveRequest leaveRequest = _repository.GetSingle(id);
+
+				if (leaveRequest.Status != "Submitted")
+				{
+					leaveRequest.Status = "Submitted";
+					_repository.Edit(leaveRequest);
+					_repository.Save();
+
+                    ApplicationUser? _user = await _userManager.GetUserAsync(User);
+
+					Employee employee = _employeesRepository.GetAllRecords().Where(e=>e.Id==_user.EmployeeId).Include(e=>e.ProjectsAndEmployees).Single();
+
+					ApprovalRequest approvalRequest = new ApprovalRequest()
+					{
+						Approver = employee.PeoplePartner,
+						LeaveRequest = leaveRequest.Id
+					};
+					_approvalRequestsRepository.Add(approvalRequest);
+					_approvalRequestsRepository.Save();
+
+					List<int> projectManagersIds = new();
+
+					foreach (ProjectsAndEmployee projectId in employee.ProjectsAndEmployees)
+					{
+						Project project = _projectsRepository.GetSingle(projectId.ProjectId);
+						if(!projectManagersIds.Contains(project.ProjectManager))
+						{
+							projectManagersIds.Add(project.ProjectManager);
+						}
+					}
+
+					foreach (int projectManagerId in projectManagersIds)
+					{
+						approvalRequest = new ApprovalRequest()
+						{
+							Approver = projectManagerId,
+							LeaveRequest = leaveRequest.Id
+						};
+                        _approvalRequestsRepository.Add(approvalRequest);
+                        _approvalRequestsRepository.Save();
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+			catch
+			{
+				return View();
+			}
 		}
 
 		// POST: LeaveRequests/Delete/5

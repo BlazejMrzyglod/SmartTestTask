@@ -117,14 +117,16 @@ namespace OutOfOffice.Controllers.Lists
 				_repository.Save();
 
 				LeaveRequest leaveRequest = _leaveRequestsRepository.GetSingle(approvalRequest.LeaveRequest);
-				leaveRequest.Status = "Approved";
-				_leaveRequestsRepository.Edit(leaveRequest);
-				_leaveRequestsRepository.Save();
-
-				Employee employee = _employeesRepository.GetSingle(leaveRequest.Employee);
-				employee.OutOfOfficeBalance -= (leaveRequest.EndDate.Day - leaveRequest.StartDate.Day);
-				_employeesRepository.Edit(employee);
-				_employeesRepository.Save();
+				if (leaveRequest.Status != "Approved")
+				{
+					leaveRequest.Status = "Approved";
+					_leaveRequestsRepository.Edit(leaveRequest);
+					_leaveRequestsRepository.Save();
+					Employee employee = _employeesRepository.GetSingle(leaveRequest.Employee);
+					employee.OutOfOfficeBalance -= (leaveRequest.EndDate.Day - leaveRequest.StartDate.Day);
+					_employeesRepository.Edit(employee);
+					_employeesRepository.Save();
+				}
 			}
 			return RedirectToAction(nameof(Index));
 		}

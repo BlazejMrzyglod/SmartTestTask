@@ -62,7 +62,7 @@
 		<dd class="col-sm-10">
 			@foreach (var project in Model.ProjectsAndEmployees)
 			{
-				<a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id">@project.Id</a>
+				<a asp-controller="Projects" asp-action="Details" asp-route-id="@project.ProjectId">@project.Id</a>
 			}
 		</dd>
 	</dl>

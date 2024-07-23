@@ -236,6 +236,35 @@ namespace OutOfOffice.Controllers.Lists
 			{
 				return View();
 			}
+		}// GET: LeaveRequests/Submit/5
+		public ActionResult Cancel(int id)
+		{
+			try
+			{
+				LeaveRequest leaveRequest = _repository.GetAllRecords().Where(e => e.Id == id).Include(e=>e.ApprovalRequests).Single();
+
+				if (leaveRequest.Status != "Canceled")
+				{
+					leaveRequest.Status = "Canceled";
+					_repository.Edit(leaveRequest);
+					_repository.Save();
+
+
+					foreach (var request in leaveRequest.ApprovalRequests)
+					{
+						request.Status = "Canceled";
+						_approvalRequestsRepository.Edit(request);
+						_approvalRequestsRepository.Save();
+					}
+                    
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+			catch
+			{
+				return View();
+			}
 		}
 
 		// POST: LeaveRequests/Delete/5

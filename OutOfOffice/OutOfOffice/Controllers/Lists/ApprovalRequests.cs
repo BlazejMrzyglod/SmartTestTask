@@ -116,9 +116,15 @@ namespace OutOfOffice.Controllers.Lists
 				_repository.Edit(approvalRequest);
 				_repository.Save();
 
-				LeaveRequest leaveRequest = _leaveRequestsRepository.GetSingle(approvalRequest.LeaveRequest);
+				LeaveRequest leaveRequest = _leaveRequestsRepository.GetAllRecords().Where(e=>e.Id == approvalRequest.LeaveRequest).Include(e=>e.ApprovalRequests).Single();
 				if (leaveRequest.Status != "Approved")
 				{
+					foreach (var request in leaveRequest.ApprovalRequests)
+					{
+						if (request.Status != "Approved")
+							return RedirectToAction(nameof(Index));
+                    }
+
 					leaveRequest.Status = "Approved";
 					_leaveRequestsRepository.Edit(leaveRequest);
 					_leaveRequestsRepository.Save();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace OutOfOffice.Models.ViewModels
 {
@@ -8,6 +9,7 @@ namespace OutOfOffice.Models.ViewModels
 
         public string Approver { get; set; } = null!;
 
+        [Display(Name = "Leave request id")]
         public int LeaveRequest { get; set; }
 
         public string Status { get; set; } = null!;

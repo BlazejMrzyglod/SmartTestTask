@@ -167,8 +167,8 @@ namespace OutOfOffice.Controllers.Lists
 			return View(projects);
 		}
 
-		// POST: Projects/AssignEmployee/5
-		[HttpPost]
+        // POST: Projects/AssignEmployee/5
+        [HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult AssignEmployee(int id, int projectId)
 		{
@@ -182,5 +182,18 @@ namespace OutOfOffice.Controllers.Lists
 				return View();
 			}
 		}
-	}
+
+        // GET: Projects/Deactivate/5
+        public ActionResult Deactivate(int id)
+        {
+			Project project = _repository.GetSingle(id);
+			if (project.Status != "Inactive")
+			{
+				project.Status = "Inactive";
+				_repository.Edit(project);
+				_repository.Save();
+			}
+            return RedirectToAction(nameof(Index));
+        }
+    }
 }

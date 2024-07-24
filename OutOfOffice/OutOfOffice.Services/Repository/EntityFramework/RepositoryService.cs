@@ -1,7 +1,7 @@
-﻿using OutOfOffice.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using OutOfOffice.Models;
 using OutOfOffice.Services.Data;
+using System.Linq.Expressions;
 
 namespace OutOfOffice.Services.Repository.EntityFramework
 {
@@ -18,10 +18,10 @@ namespace OutOfOffice.Services.Repository.EntityFramework
 
         public virtual ServiceResult Add(T entity)
         {
-            ServiceResult result = new ServiceResult();
+            ServiceResult result = new();
             try
             {
-                _set.Add(entity);
+                _ = _set.Add(entity);
                 result = Save();
             }
             catch (Exception e)
@@ -34,10 +34,10 @@ namespace OutOfOffice.Services.Repository.EntityFramework
         }
         public virtual ServiceResult Delete(T entity)
         {
-            ServiceResult result = new ServiceResult();
+            ServiceResult result = new();
             try
             {
-                _set.Remove(entity);
+                _ = _set.Remove(entity);
                 result = Save();
             }
             catch (Exception e)
@@ -50,7 +50,7 @@ namespace OutOfOffice.Services.Repository.EntityFramework
 
         public virtual ServiceResult Edit(T entity)
         {
-            ServiceResult result = new ServiceResult();
+            ServiceResult result = new();
             try
             {
                 _context.Entry(entity).State = EntityState.Modified;
@@ -75,19 +75,19 @@ namespace OutOfOffice.Services.Repository.EntityFramework
         {
             return _set;
         }
-        public virtual T GetSingle(int id)
+        public virtual T? GetSingle(int id)
         {
 
-            var result = _set.FirstOrDefault(r => r.Id == id);
+            T? result = _set.FirstOrDefault(r => r.Id == id);
 
-            return result; ;
+            return result ?? null;
         }
         public virtual ServiceResult Save()
         {
-            ServiceResult result = new ServiceResult();
+            ServiceResult result = new();
             try
             {
-                _context.SaveChanges();
+                _ = _context.SaveChanges();
             }
             catch (Exception e)
             {

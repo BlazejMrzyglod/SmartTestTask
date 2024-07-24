@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OutOfOffice.Models.Models;
 
 namespace OutOfOffice.Models.ViewModels
 {
@@ -30,6 +26,6 @@ namespace OutOfOffice.Models.ViewModels
         public static SelectList Subdivisions { get; set; } = new SelectList(new List<string> { "HR", "Development", "Management", "Administration" });
         public static SelectList StatusOptions { get; set; } = new SelectList(new List<string> { "Active", "Inactive" });
         public static SelectList? HRManagers { get; set; }
-		public virtual ICollection<ProjectsAndEmployee> ProjectsAndEmployees { get; set; } = new List<ProjectsAndEmployee>();
-	}
+        public virtual ICollection<ProjectsAndEmployee> ProjectsAndEmployees { get; set; } = new List<ProjectsAndEmployee>();
+    }
 }

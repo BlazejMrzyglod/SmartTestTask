@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OutOfOffice.Models;
+using OutOfOffice.Models.Models;
 using OutOfOffice.Models.ViewModels;
 using OutOfOffice.Services.Data;
 using OutOfOffice.Services.Repository;
@@ -10,165 +9,156 @@ using OutOfOffice.Services.Repository.EntityFramework;
 
 namespace OutOfOffice.Controllers.Lists
 {
-	public class ApprovalRequests : Controller
-	{
-		private readonly IRepositoryService<ApprovalRequest> _repository;
-		private readonly IRepositoryService<LeaveRequest> _leaveRequestsRepository;
-		private readonly IRepositoryService<Employee> _employeesRepository;
-		private readonly IMapper _mapper;
+    public class ApprovalRequests(ApplicationDbContext context, IMapper mapper) : Controller
+    {
+        private readonly RepositoryService<ApprovalRequest> _repository = new(context);
+        private readonly RepositoryService<LeaveRequest> _leaveRequestsRepository = new(context);
+        private readonly RepositoryService<Employee> _employeesRepository = new(context);
+        private readonly IMapper _mapper = mapper;
 
-		public ApprovalRequests(ApplicationDbContext context, IMapper mapper)
-		{
-			_repository = new RepositoryService<ApprovalRequest>(context);
-			_leaveRequestsRepository = new RepositoryService<LeaveRequest>(context);
-			_employeesRepository = new RepositoryService<Employee>(context);
-			_mapper = mapper;
-		}
-		// GET: ApprovalRequests
-		public async Task<IActionResult> Index(string sortOrder, int searchString, string approverFilter, int requestFilter, string statusFilter)
-		{
-			ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
-			ViewData["ApproverSortParm"] = sortOrder == "Approver" ? "approver_desc" : "Approver";
-			ViewData["RequestSortParm"] = sortOrder == "Request" ? "request_desc" : "Request";
-			ViewData["StatusSortParm"] = sortOrder == "Status" ? "status_desc" : "Status";
-			ViewData["NumberFilter"] = searchString;
-			ViewData["ApproverFilter"] = approverFilter;
-			ViewData["RequestFilter"] = requestFilter;
-			ViewData["StatusFilter"] = statusFilter;
+        // GET: ApprovalRequests
+        public IActionResult Index(string sortOrder, int searchString, string approverFilter, int requestFilter, string statusFilter)
+        {
+            ViewData["IdSortParm"] = string.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewData["ApproverSortParm"] = sortOrder == "Approver" ? "approver_desc" : "Approver";
+            ViewData["RequestSortParm"] = sortOrder == "Request" ? "request_desc" : "Request";
+            ViewData["StatusSortParm"] = sortOrder == "Status" ? "status_desc" : "Status";
+            ViewData["NumberFilter"] = searchString;
+            ViewData["ApproverFilter"] = approverFilter;
+            ViewData["RequestFilter"] = requestFilter;
+            ViewData["StatusFilter"] = statusFilter;
 
 
-			IQueryable<ApprovalRequest> approvalRequests = _repository.GetAllRecords()
-				.Include(e => e.ApproverNavigation);
+            IQueryable<ApprovalRequest> approvalRequests = _repository.GetAllRecords()
+                .Include(e => e.ApproverNavigation);
 
-			if (searchString != 0)
-			{
-				approvalRequests = approvalRequests.Where(s => s.Id.Equals(searchString));
-			}
+            if (searchString != 0)
+            {
+                approvalRequests = approvalRequests.Where(s => s.Id.Equals(searchString));
+            }
 
-			if (!String.IsNullOrEmpty(approverFilter))
-			{
-				approvalRequests = approvalRequests.Where(s => s.ApproverNavigation.FullName.Contains(approverFilter));
-			}
+            if (!string.IsNullOrEmpty(approverFilter))
+            {
+                approvalRequests = approvalRequests.Where(s => s.ApproverNavigation.FullName.Contains(approverFilter));
+            }
 
-			if (requestFilter != 0)
-			{
-				approvalRequests = approvalRequests.Where(s => s.LeaveRequest.Equals(requestFilter));
-			}
+            if (requestFilter != 0)
+            {
+                approvalRequests = approvalRequests.Where(s => s.LeaveRequest.Equals(requestFilter));
+            }
 
-			if (!String.IsNullOrEmpty(statusFilter))
-			{
-				approvalRequests = approvalRequests.Where(s => s.Status.Equals(statusFilter));
-			}
+            if (!string.IsNullOrEmpty(statusFilter))
+            {
+                approvalRequests = approvalRequests.Where(s => s.Status.Equals(statusFilter));
+            }
 
-			List<ApprovalRequestViewModel> viewModels = new();
+            List<ApprovalRequestViewModel> viewModels = [];
 
-			switch (sortOrder)
-			{
-				case "id_desc":
-					approvalRequests = approvalRequests.OrderByDescending(e => e.Id);
-					break;
-				case "Approver":
-					approvalRequests = approvalRequests.OrderBy(e => e.Approver);
-					break;
-				case "approver_desc":
-					approvalRequests = approvalRequests.OrderByDescending(e => e.Approver);
-					break;
-				case "Request":
-					approvalRequests = approvalRequests.OrderBy(e => e.LeaveRequest);
-					break;
-				case "request_desc":
-					approvalRequests = approvalRequests.OrderByDescending(e => e.LeaveRequest);
-					break;
-				case "Status":
-					approvalRequests = approvalRequests.OrderBy(e => e.Status);
-					break;
-				case "status_desc":
-					approvalRequests = approvalRequests.OrderByDescending(e => e.Status);
-					break;
-				default:
-					approvalRequests = approvalRequests.OrderBy(e => e.Id);
-					break;
-			}
-			foreach (var request in approvalRequests)
-			{
-				viewModels.Add(_mapper.Map<ApprovalRequestViewModel>(request));
-			}
+            approvalRequests = sortOrder switch
+            {
+                "id_desc" => approvalRequests.OrderByDescending(e => e.Id),
+                "Approver" => approvalRequests.OrderBy(e => e.Approver),
+                "approver_desc" => approvalRequests.OrderByDescending(e => e.Approver),
+                "Request" => approvalRequests.OrderBy(e => e.LeaveRequest),
+                "request_desc" => approvalRequests.OrderByDescending(e => e.LeaveRequest),
+                "Status" => approvalRequests.OrderBy(e => e.Status),
+                "status_desc" => approvalRequests.OrderByDescending(e => e.Status),
+                _ => approvalRequests.OrderBy(e => e.Id),
+            };
+            foreach (ApprovalRequest request in approvalRequests)
+            {
+                viewModels.Add(_mapper.Map<ApprovalRequestViewModel>(request));
+            }
 
-			return View(viewModels);
-		}
+            return View(viewModels);
+        }
 
-		// GET: ApprovalRequests/Details/5
-		public ActionResult Details(int id)
-		{
-			ApprovalRequest approvalRequest = _repository.GetAllRecords()
-														 .Include(e => e.ApproverNavigation).Where(e => e.Id == id).Single();
-			return View(_mapper.Map<ApprovalRequestViewModel>(approvalRequest));
-		}
-		
-		// GET: ApprovalRequests/Approve/5
-		public ActionResult Approve(int id)
-		{
+        // GET: ApprovalRequests/Details/5
+        public ActionResult Details(int id)
+        {
+            ApprovalRequest approvalRequest = _repository.GetAllRecords()
+                                                         .Include(e => e.ApproverNavigation).Where(e => e.Id == id).Single();
+            return View(_mapper.Map<ApprovalRequestViewModel>(approvalRequest));
+        }
 
-			ApprovalRequest approvalRequest = _repository.GetSingle(id);
-			if (approvalRequest.Status != "Approved")
-			{
-				approvalRequest.Status = "Approved";
-				_repository.Edit(approvalRequest);
-				_repository.Save();
+        // GET: ApprovalRequests/Approve/5
+        public ActionResult Approve(int id)
+        {
 
-				LeaveRequest leaveRequest = _leaveRequestsRepository.GetAllRecords().Where(e=>e.Id == approvalRequest.LeaveRequest).Include(e=>e.ApprovalRequests).Single();
-				if (leaveRequest.Status != "Approved")
-				{
-					foreach (var request in leaveRequest.ApprovalRequests)
-					{
-						if (request.Status != "Approved")
-							return RedirectToAction(nameof(Index));
+            ApprovalRequest? approvalRequest = _repository.GetSingle(id);
+            if (approvalRequest != null)
+            {
+                if (approvalRequest.Status != "Approved")
+                {
+                    approvalRequest.Status = "Approved";
+                    _ = _repository.Edit(approvalRequest);
+                    _ = _repository.Save();
+
+                    LeaveRequest leaveRequest = _leaveRequestsRepository.GetAllRecords().Where(e => e.Id == approvalRequest.LeaveRequest).Include(e => e.ApprovalRequests).Single();
+                    if (leaveRequest.Status != "Approved")
+                    {
+                        foreach (ApprovalRequest request in leaveRequest.ApprovalRequests)
+                        {
+                            if (request.Status != "Approved")
+                            {
+                                return RedirectToAction(nameof(Index));
+                            }
+                        }
+
+                        leaveRequest.Status = "Approved";
+                        _ = _leaveRequestsRepository.Edit(leaveRequest);
+                        _ = _leaveRequestsRepository.Save();
+                        Employee? employee = _employeesRepository.GetSingle(leaveRequest.Employee);
+                        if (employee != null)
+                        {
+                            employee.OutOfOfficeBalance -= leaveRequest.EndDate.Day - leaveRequest.StartDate.Day;
+                            _ = _employeesRepository.Edit(employee);
+                            _ = _employeesRepository.Save();
+                        }
                     }
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
-					leaveRequest.Status = "Approved";
-					_leaveRequestsRepository.Edit(leaveRequest);
-					_leaveRequestsRepository.Save();
-					Employee employee = _employeesRepository.GetSingle(leaveRequest.Employee);
-					employee.OutOfOfficeBalance -= (leaveRequest.EndDate.Day - leaveRequest.StartDate.Day);
-					_employeesRepository.Edit(employee);
-					_employeesRepository.Save();
-				}
-			}
-			return RedirectToAction(nameof(Index));
-		}
+        // GET: ApprovalRequests/Reject/5
+        public ActionResult Reject()
+        {
+            return View();
+        }
 
-		// GET: ApprovalRequests/Reject/5
-		public ActionResult Reject(int id)
-		{
-			return View();
-		}
+        // POST: ApprovalRequests/Reject/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Reject(int id, string comment)
+        {
+            try
+            {
+                ApprovalRequest? approvalRequest = _repository.GetSingle(id);
+                if (approvalRequest != null)
+                {
+                    if (approvalRequest.Status != "Rejected")
+                    {
+                        approvalRequest.Comment = comment;
+                        approvalRequest.Status = "Rejected";
+                        _ = _repository.Edit(_mapper.Map<ApprovalRequest>(approvalRequest));
+                        _ = _repository.Save();
 
-		// POST: ApprovalRequests/Reject/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Reject(int id, string comment)
-		{
-			try
-			{
-				ApprovalRequest approvalRequest = _repository.GetSingle(id);
-				if (approvalRequest.Status != "Rejected")
-				{
-					approvalRequest.Comment = comment;
-					approvalRequest.Status = "Rejected";
-					_repository.Edit(_mapper.Map<ApprovalRequest>(approvalRequest));
-					_repository.Save();
-
-					LeaveRequest leaveRequest = _leaveRequestsRepository.GetSingle(approvalRequest.LeaveRequest);
-					leaveRequest.Status = "Rejected";
-					_leaveRequestsRepository.Edit(leaveRequest);
-					_leaveRequestsRepository.Save();
-				}
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
-	}
+                        LeaveRequest? leaveRequest = _leaveRequestsRepository.GetSingle(approvalRequest.LeaveRequest);
+                        if (leaveRequest != null)
+                        {
+                            leaveRequest.Status = "Rejected";
+                            _ = _leaveRequestsRepository.Edit(leaveRequest);
+                            _ = _leaveRequestsRepository.Save();
+                        }
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+    }
 }

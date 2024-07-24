@@ -1,4 +1,4 @@
-﻿namespace OutOfOffice.Models;
+﻿namespace OutOfOffice.Models.Models;
 
 public partial class Employee : IEntity<int>
 {
@@ -25,8 +25,8 @@ public partial class Employee : IEntity<int>
     public virtual ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
 
     public virtual Employee PeoplePartnerNavigation { get; set; } = null!;
-	public virtual ApplicationUser ApplicationUser { get; set; } = null!;
+    public virtual ApplicationUser ApplicationUser { get; set; } = null!;
 
-	public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
-	public virtual ICollection<ProjectsAndEmployee> ProjectsAndEmployees { get; set; } = new List<ProjectsAndEmployee>();
+    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+    public virtual ICollection<ProjectsAndEmployee> ProjectsAndEmployees { get; set; } = new List<ProjectsAndEmployee>();
 }

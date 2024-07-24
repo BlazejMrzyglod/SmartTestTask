@@ -1,4 +1,4 @@
-﻿namespace OutOfOffice.Models;
+﻿namespace OutOfOffice.Models.Models;
 
 public partial class LeaveRequest : IEntity<int>
 {

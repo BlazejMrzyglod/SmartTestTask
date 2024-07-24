@@ -7,7 +7,7 @@ namespace OutOfOffice.Services.Repository
     {
         IQueryable<T> GetAllRecords();
 
-        T GetSingle(int id);
+        T? GetSingle(int id);
         IQueryable<T> FindBy(Expression<Func<T, bool>> predicate);
         ServiceResult Add(T entity);
         ServiceResult Delete(T entity);

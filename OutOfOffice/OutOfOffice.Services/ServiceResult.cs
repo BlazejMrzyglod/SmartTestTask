@@ -16,7 +16,7 @@ namespace OutOfOffice.Services
     public class ServiceResult
     {
         public ServiceResultStatus Result { get; set; }
-        public ICollection<String> Messages { get; set; }
+        public ICollection<string> Messages { get; set; }
 
         public ServiceResult()
         {

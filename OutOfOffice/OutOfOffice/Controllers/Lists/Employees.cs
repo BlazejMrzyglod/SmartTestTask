@@ -1,32 +1,23 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using OutOfOffice.Models;
+using OutOfOffice.Models.Models;
 using OutOfOffice.Models.ViewModels;
 using OutOfOffice.Services.Data;
 using OutOfOffice.Services.Repository;
 using OutOfOffice.Services.Repository.EntityFramework;
-using System.Linq;
 
 namespace OutOfOffice.Controllers.Lists
 {
-    public class Employees : Controller
+    public class Employees(ApplicationDbContext context, IMapper mapper) : Controller
     {
-        private readonly IRepositoryService<Employee> _repository;
-        private readonly IMapper _mapper;
-
-        public Employees(ApplicationDbContext context, IMapper mapper)
-        {
-            _repository = new RepositoryService<Employee>(context);
-            _mapper = mapper;
-        }
+        private readonly RepositoryService<Employee> _repository = new(context);
+        private readonly IMapper _mapper = mapper;
 
         // GET: Employees
-        public async Task<IActionResult> Index(string sortOrder, string searchString, string positionFilter, string subdivisionFilter, string statusFilter)
+        public IActionResult Index(string sortOrder, string searchString, string positionFilter, string subdivisionFilter, string statusFilter)
         {
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["SubdivisionSortParm"] = sortOrder == "Subdivision" ? "subdivision_desc" : "Subdivision";
             ViewData["PositionSortParm"] = sortOrder == "Position" ? "position_desc" : "Position";
             ViewData["PartnerSortParm"] = sortOrder == "Partner" ? "partner_desc" : "Partner";
@@ -40,68 +31,44 @@ namespace OutOfOffice.Controllers.Lists
             IQueryable<Employee> employees = _repository.GetAllRecords()
                 .Include(e => e.PeoplePartnerNavigation);
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 employees = employees.Where(s => s.FullName.Contains(searchString));
             }
 
-            if (!String.IsNullOrEmpty(positionFilter))
+            if (!string.IsNullOrEmpty(positionFilter))
             {
                 employees = employees.Where(s => s.Position.Equals(positionFilter));
             }
 
-            if (!String.IsNullOrEmpty(subdivisionFilter))
+            if (!string.IsNullOrEmpty(subdivisionFilter))
             {
                 employees = employees.Where(s => s.Subdivision.Equals(subdivisionFilter));
             }
 
-            if (!String.IsNullOrEmpty(statusFilter))
+            if (!string.IsNullOrEmpty(statusFilter))
             {
                 employees = employees.Where(s => s.Status.Equals(statusFilter));
             }
 
-            List<EmployeeViewModel> employeesViewModels = new();
+            List<EmployeeViewModel> employeesViewModels = [];
 
-            switch (sortOrder)
+            employees = sortOrder switch
             {
-                case "name_desc":
-                    employees = employees.OrderByDescending(e => e.FullName);
-                    break;
-                case "Subdivision":
-                    employees = employees.OrderBy(e => e.Subdivision);
-                    break;
-                case "subdivision_desc":
-                    employees = employees.OrderByDescending(e => e.Subdivision);
-                    break;
-                case "Position":
-                    employees = employees.OrderBy(e => e.Position);
-                    break;
-                case "position_desc":
-                    employees = employees.OrderByDescending(e => e.Position);
-                    break;
-                case "Partner":
-                    employees = employees.OrderBy(e => e.PeoplePartner);
-                    break;
-                case "partner_desc":
-                    employees = employees.OrderByDescending(e => e.PeoplePartner);
-                    break;
-                case "Balance":
-                    employees = employees.OrderBy(e => e.OutOfOfficeBalance);
-                    break;
-                case "balance_desc":
-                    employees = employees.OrderByDescending(e => e.OutOfOfficeBalance);
-                    break;
-                case "Status":
-                    employees = employees.OrderBy(e => e.Status);
-                    break;
-                case "status_desc":
-                    employees = employees.OrderByDescending(e => e.Status);
-                    break;
-                default:
-                    employees = employees.OrderBy(e => e.FullName);
-                    break;
-            }
-            foreach (var employee in employees)
+                "name_desc" => employees.OrderByDescending(e => e.FullName),
+                "Subdivision" => employees.OrderBy(e => e.Subdivision),
+                "subdivision_desc" => employees.OrderByDescending(e => e.Subdivision),
+                "Position" => employees.OrderBy(e => e.Position),
+                "position_desc" => employees.OrderByDescending(e => e.Position),
+                "Partner" => employees.OrderBy(e => e.PeoplePartner),
+                "partner_desc" => employees.OrderByDescending(e => e.PeoplePartner),
+                "Balance" => employees.OrderBy(e => e.OutOfOfficeBalance),
+                "balance_desc" => employees.OrderByDescending(e => e.OutOfOfficeBalance),
+                "Status" => employees.OrderBy(e => e.Status),
+                "status_desc" => employees.OrderByDescending(e => e.Status),
+                _ => employees.OrderBy(e => e.FullName),
+            };
+            foreach (Employee employee in employees)
             {
                 employeesViewModels.Add(_mapper.Map<EmployeeViewModel>(employee));
             }
@@ -122,7 +89,7 @@ namespace OutOfOffice.Controllers.Lists
         {
             try
             {
-                _repository.Add(_mapper.Map<Employee>(employee));
+                _ = _repository.Add(_mapper.Map<Employee>(employee));
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -146,8 +113,8 @@ namespace OutOfOffice.Controllers.Lists
         {
             try
             {
-                _repository.Edit(_mapper.Map<Employee>(employee));
-                _repository.Save();
+                _ = _repository.Edit(_mapper.Map<Employee>(employee));
+                _ = _repository.Save();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -159,7 +126,7 @@ namespace OutOfOffice.Controllers.Lists
         // GET: Employees/Details/5
         public ActionResult Details(int id)
         {
-            Employee employee = _repository.GetAllRecords().Where(x => x.Id == id).Include(x => x.PeoplePartnerNavigation).Include(x=>x.ProjectsAndEmployees).Single();
+            Employee employee = _repository.GetAllRecords().Where(x => x.Id == id).Include(x => x.PeoplePartnerNavigation).Include(x => x.ProjectsAndEmployees).Single();
 
             return View(_mapper.Map<EmployeeEditViewModel>(employee));
         }
@@ -167,14 +134,14 @@ namespace OutOfOffice.Controllers.Lists
         // GET: Employees/ChangeStatus/5
         public ActionResult ChangeStatus(int id)
         {
-            Employee employee = _repository.GetSingle(id);
-            string status = employee.Status;
-            if (status == "Active")
-                employee.Status = "Inactive";
-            else
-                employee.Status = "Active";
-            _repository.Edit(employee);
-            _repository.Save();
+            Employee? employee = _repository.GetSingle(id);
+            if (employee != null)
+            {
+                string status = employee.Status;
+                employee.Status = status == "Active" ? "Inactive" : "Active";
+                _ = _repository.Edit(employee);
+                _ = _repository.Save();
+            }
             return RedirectToAction(nameof(Index));
         }
     }

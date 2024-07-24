@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using OutOfOffice.Models.Models;
 using OutOfOffice.Models.ViewModels;
-using OutOfOffice.Models;
 
 namespace OutOfOffice.MapperProfiles
 {
@@ -8,7 +8,7 @@ namespace OutOfOffice.MapperProfiles
     {
         public ApprovalRequestsProfile()
         {
-            CreateMap<ApprovalRequest, ApprovalRequestViewModel>().ForMember(dest => dest.Approver, opt => opt.MapFrom(e => e.ApproverNavigation.FullName));
+            _ = CreateMap<ApprovalRequest, ApprovalRequestViewModel>().ForMember(dest => dest.Approver, opt => opt.MapFrom(e => e.ApproverNavigation.FullName));
             //CreateMap<ApprovalRequestViewModel, ApprovalRequest>();
         }
     }

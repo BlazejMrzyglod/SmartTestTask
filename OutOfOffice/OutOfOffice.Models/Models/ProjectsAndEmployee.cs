@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OutOfOffice.Models;
+﻿namespace OutOfOffice.Models.Models;
 
 public partial class ProjectsAndEmployee : IEntity<int>
 {

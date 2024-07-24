@@ -21,4 +21,6 @@ public partial class ProjectViewModel
 	public virtual ICollection<ProjectsAndEmployee> ProjectsAndEmployees { get; set; } = new List<ProjectsAndEmployee>();
 	public static SelectList ProjectTypeOptions { get; set; } = new SelectList(new List<string> { "Backend", "Frontend", "Database" });
 	public static SelectList StatusOptions { get; set; } = new SelectList(new List<string> { "Active", "Inactive" });
+    public static SelectList? ProjectManagers { get; set; }
+
 }

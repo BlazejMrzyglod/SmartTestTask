@@ -123,17 +123,18 @@ namespace OutOfOffice.Controllers.Lists
 		// POST: Projects/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
+		public ActionResult Create([Bind("ProjectType,StartDate,EndDate,ProjectManager,Comment,Status")] ProjectViewModel project)
 		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
+            try
+            {
+                _repository.Add(_mapper.Map<Project>(project));
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
 		// GET: Projects/Edit/5
 		public ActionResult Edit(int id)

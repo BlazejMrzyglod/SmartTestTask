@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Models.Models;
@@ -9,6 +10,7 @@ using OutOfOffice.Services.Repository.EntityFramework;
 
 namespace OutOfOffice.Controllers.Lists
 {
+    [Authorize(Roles = "Administrator, HR_Manager, ProjectManager")]
     public class ApprovalRequests(ApplicationDbContext context, IMapper mapper) : Controller
     {
         private readonly RepositoryService<ApprovalRequest> _repository = new(context);

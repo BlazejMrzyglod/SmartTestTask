@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Models.Models;
@@ -15,6 +16,7 @@ namespace OutOfOffice.Controllers.Lists
         private readonly IMapper _mapper = mapper;
 
         // GET: Employees
+        [Authorize(Roles = "Administrator, HR_Manager, ProjectManager")]
         public IActionResult Index(string sortOrder, string searchString, string positionFilter, string subdivisionFilter, string statusFilter)
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -77,6 +79,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: Employees/Create
+        [Authorize(Roles = "Administrator, HR_Manager")]
         public ActionResult Create()
         {
             return View();
@@ -85,6 +88,7 @@ namespace OutOfOffice.Controllers.Lists
         // POST: Employees/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, HR_Manager")]
         public ActionResult Create([Bind("Id,FullName,Subdivision,Position,Status,PeoplePartner,OutOfOfficeBalance,Photo")] EmployeeCreateViewModel employee)
         {
             try
@@ -99,6 +103,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: Employees/Edit/5
+        [Authorize(Roles = "Administrator, HR_Manager")]
         public ActionResult Edit(int id)
         {
             Employee employee = _repository.GetAllRecords().Where(x => x.Id == id).Include(x => x.PeoplePartnerNavigation).Single();
@@ -109,6 +114,7 @@ namespace OutOfOffice.Controllers.Lists
         // POST: Employees/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, HR_Manager")]
         public ActionResult Edit(int id, [Bind("Id,FullName,Subdivision,Position,Status,PeoplePartner,OutOfOfficeBalance,PhotoToChange, CurrentPhoto")] EmployeeEditViewModel employee)
         {
             try
@@ -124,6 +130,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: Employees/Details/5
+        [Authorize(Roles = "Administrator, ProjectManager")]
         public ActionResult Details(int id)
         {
             Employee employee = _repository.GetAllRecords().Where(x => x.Id == id).Include(x => x.PeoplePartnerNavigation).Include(x => x.ProjectsAndEmployees).Single();
@@ -132,6 +139,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: Employees/ChangeStatus/5
+        [Authorize(Roles = "Administrator, HR_Manager")]
         public ActionResult ChangeStatus(int id)
         {
             Employee? employee = _repository.GetSingle(id);

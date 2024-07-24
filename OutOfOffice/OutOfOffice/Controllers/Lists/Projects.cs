@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.Models.Models;
 using OutOfOffice.Models.ViewModels;
@@ -8,6 +9,7 @@ using OutOfOffice.Services.Repository.EntityFramework;
 
 namespace OutOfOffice.Controllers.Lists
 {
+    [Authorize(Roles = "Administrator, HR_Manager, ProjectManager")]
     public class Projects(ApplicationDbContext context, IMapper mapper) : Controller
     {
         private readonly RepositoryService<Project> _repository = new(context);
@@ -81,6 +83,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "Administrator, ProjectManager")]
         public ActionResult Create()
         {
             return View();
@@ -89,6 +92,7 @@ namespace OutOfOffice.Controllers.Lists
         // POST: Projects/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, ProjectManager")]
         public ActionResult Create([Bind("ProjectType,StartDate,EndDate,ProjectManager,Comment,Status")] ProjectViewModel project)
         {
             try
@@ -103,6 +107,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "Administrator, ProjectManager")]
         public ActionResult Edit(int id)
         {
             return View(_mapper.Map<ProjectViewModel>(_repository.GetSingle(id)));
@@ -111,6 +116,7 @@ namespace OutOfOffice.Controllers.Lists
         // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, ProjectManager")]
         public ActionResult Edit(int id, [Bind("ProjectType,StartDate,EndDate,ProjectManager,Comment,Status")] ProjectViewModel project)
         {
             try
@@ -127,6 +133,7 @@ namespace OutOfOffice.Controllers.Lists
 
 
         // GET: Projects/AssignEmployee/5
+        [Authorize(Roles = "Administrator, ProjectManager")]
         public ActionResult AssignEmployee(int id)
         {
             List<int> projects = [.. _repository.GetAllRecords().Where(e => !e.ProjectsAndEmployees.Any(p => p.EmployeeId == id)).Select(e => e.Id)];
@@ -136,6 +143,7 @@ namespace OutOfOffice.Controllers.Lists
         // POST: Projects/AssignEmployee/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, ProjectManager")]
         public ActionResult AssignEmployee(int id, int projectId)
         {
             try
@@ -150,6 +158,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: Projects/Deactivate/5
+        [Authorize(Roles = "Administrator, ProjectManager")]
         public ActionResult Deactivate(int id)
         {
             Project? project = _repository.GetSingle(id);

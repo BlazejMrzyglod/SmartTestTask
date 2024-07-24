@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using OutOfOffice.Services.Repository.EntityFramework;
 
 namespace OutOfOffice.Controllers.Lists
 {
+    [Authorize]
     public class LeaveRequests(ApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager) : Controller
     {
         private readonly RepositoryService<LeaveRequest> _repository = new(context);
@@ -90,6 +92,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: LeaveRequests/Create
+        [Authorize(Roles = "Administrator, Employee")]
         public ActionResult Create()
         {
             return View();
@@ -98,6 +101,7 @@ namespace OutOfOffice.Controllers.Lists
         // POST: LeaveRequests/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Employee")]
         public async Task<IActionResult> Create([Bind("AbscenceReason,StartDate,EndDate,Comment")] LeaveRequestViewModel _leaveRequest)
         {
             try
@@ -116,6 +120,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: LeaveRequests/Edit/5
+        [Authorize(Roles = "Administrator, Employee")]
         public ActionResult Edit(int id)
         {
             LeaveRequest leaveRequest = _repository.GetAllRecords().Where(x => x.Id == id).Include(e => e.EmployeeNavigation).Single(); ;
@@ -126,6 +131,7 @@ namespace OutOfOffice.Controllers.Lists
         // POST: LeaveRequests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Employee")]
         public ActionResult Edit(int id, [Bind("AbscenceReason,StartDate,EndDate,Comment")] LeaveRequestViewModel _leaveRequest)
         {
             try
@@ -149,6 +155,7 @@ namespace OutOfOffice.Controllers.Lists
         }
 
         // GET: LeaveRequests/Submit/5
+        [Authorize(Roles = "Administrator, Employee")]
         public async Task<IActionResult> Submit(int id)
         {
             try
@@ -211,7 +218,10 @@ namespace OutOfOffice.Controllers.Lists
             {
                 return View();
             }
-        }// GET: LeaveRequests/Submit/5
+        }
+
+        // GET: LeaveRequests/Submit/5
+        [Authorize(Roles = "Administrator, Employee")]
         public ActionResult Cancel(int id)
         {
             try
@@ -234,21 +244,6 @@ namespace OutOfOffice.Controllers.Lists
 
                 }
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // POST: LeaveRequests/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
                 return RedirectToAction(nameof(Index));
             }
             catch

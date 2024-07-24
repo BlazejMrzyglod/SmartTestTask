@@ -111,7 +111,7 @@ namespace OutOfOffice.Controllers.Lists
 		// GET: Projects/Details/5
 		public ActionResult Details(int id)
 		{
-			return View();
+			return View(_mapper.Map<ProjectViewModel>(_repository.GetSingle(id)));
 		}
 
 		// GET: Projects/Create

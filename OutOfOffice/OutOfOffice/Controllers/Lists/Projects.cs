@@ -139,23 +139,25 @@ namespace OutOfOffice.Controllers.Lists
 		// GET: Projects/Edit/5
 		public ActionResult Edit(int id)
 		{
-			return View();
+			return View(_mapper.Map<ProjectViewModel>(_repository.GetSingle(id)));
 		}
 
 		// POST: Projects/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		public ActionResult Edit(int id, [Bind("ProjectType,StartDate,EndDate,ProjectManager,Comment,Status")] ProjectViewModel project)
 		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
+            try
+            {
+                _repository.Edit(_mapper.Map<Project>(project));
+                _repository.Save();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
 
 		// GET: Projects/AssignEmployee/5
